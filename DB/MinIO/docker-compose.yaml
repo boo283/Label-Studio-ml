@@ -1,0 +1,46 @@
+services:
+    minio:
+        image: 'minio/minio:latest'
+        hostname: minio
+        container_name: minio
+        # network_mode: host
+        # expose:
+        #     - 9000
+        #     - 9001
+        ports:
+            - '9000:9000'
+            - '9001:9001'
+        volumes:
+            - ./mnt/minio/data:/minio
+        environment:
+            MINIO_ACCESS_KEY: minio
+            MINIO_SECRET_KEY: minio123
+        command: server --console-address ":9001" /minio
+
+
+    mc:
+        image: minio/mc
+        container_name: mc
+        depends_on:
+            - minio
+        volumes:
+            - ./mnt/minio/data:/minio
+        environment:
+            - AWS_ACCESS_KEY_ID=minio
+            - AWS_SECRET_ACCESS_KEY=minio123
+            - AWS_REGION=us-east-1
+        entrypoint: >
+            /bin/sh -c " 
+              until (/usr/bin/mc config host add minio http://minio:9000 minio minio123) do 
+                echo '...waiting...' && sleep 5;
+                done;
+              if ! /usr/bin/mc ls minio/streetview >/dev/null 2>&1; then
+                  /usr/bin/mc mb minio/streetview;
+                  /usr/bin/mc policy set public minio/streetview;
+              fi;
+              if ! /usr/bin/mc ls minio/checkpoint>/dev/null 2>&1; then
+                  /usr/bin/mc mb minio/checkpoint;
+                  /usr/bin/mc policy set public minio/checkpoint;
+              fi;
+              tail -f /dev/null
+            "

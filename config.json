@@ -1,0 +1,7 @@
+{
+  "LABEL_STUDIO_DISABLE_CSRF_PROTECTION": true,
+  "LABEL_STUDIO_ALLOWED_HOSTS": "*",
+  "LABEL_STUDIO_HOST": "0.0.0.0",
+  "LABEL_STUDIO_PORT": 8080,
+  "LABEL_STUDIO_CSRF_TRUSTED_ORIGINS": ["https://*.ngrok-free.app", "https://*.ngrok.io"]
+}
