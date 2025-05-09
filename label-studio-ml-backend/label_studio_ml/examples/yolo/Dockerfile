@@ -49,6 +49,9 @@ WORKDIR /app
 
 COPY . ./
 
+# Make start.sh executable
+RUN chmod +x /app/start.sh
+
 # Download the YOLO models
 RUN /bin/sh -c 'if [ ! -f /app/models/yolov8m.pt ]; then \
     yolo predict model=/app/models/yolov8m.pt source=/app/tests/car.jpg \
