@@ -1,0 +1,98 @@
+services:
+#   minio:
+#     image: 'minio/minio:latest'
+#     hostname: minio
+#     container_name: minio
+#     # network_mode: host
+#     # expose:
+#     #     - 9000
+#     #     - 9001
+#     ports:
+#       - '9000:9000'
+#       - '9001:9001'
+# #    volumes:
+# #      - /mnt/minio/data:/minio
+#     environment:
+#       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+#       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+#     command: server --console-address ":9001" /minio
+#     healthcheck:
+#       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+#       interval: 5s
+#       timeout: 3s
+#       retries: 5
+#     networks:
+#       - minio_net
+#     restart: always
+
+
+#   mc:
+#     image: minio/mc
+#     container_name: mc
+#     depends_on:
+#       minio:
+#         condition: service_healthy
+#     volumes:
+# #      - /mnt/minio/data:/minio
+#       #- /init-images:/init-images
+#       - ./upload_new_images.sh:/usr/bin/upload_new_images.sh
+#     environment:
+# #      - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER}
+# #      - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+# #      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
+# #      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+#         MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+#         MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+# #      - AWS_REGION=us-east-1
+#     entrypoint: >
+#       /bin/sh -c "
+#               chmod +x /usr/bin/upload_new_images.sh && 
+#               /usr/bin/upload_new_images.sh
+#             "
+      
+#       healthcheck:
+#       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+#       interval: 5s
+#       timeout: 3s
+#       retries: 5
+#     networks:
+#       - minio_net
+
+#   python_uploader:
+#     build:
+#       context: ./Python
+#     container_name: Python_uploader
+#     depends_on:
+#       minio:
+#         condition: service_healthy
+#     volumes:
+#       - ./init-images:/init-images
+#     environment:
+#       MINIO_ENDPOINT: minio:9000
+#       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+#       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+#       MINIO_SECURE: "false"
+#     networks:
+#       - minio_net
+
+  label_studio:
+    image: heartexlabs/label-studio:latest
+    container_name: label_studio
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./label-studio:/label-studio
+    environment:
+      - LABEL_STUDIO_HOST=http://172.17.28.48:8080 # using IPv4
+      - LABEL_STUDIO_PORT=8080
+#      - MINIO_ENDPOINT=minio:9000
+#      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+#      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+#      - MINIO_SECURE=false
+#      - LABEL_STUDIO_ML_BACKENDS=http://segment_anything_model:9090
+    networks:
+      - minio_net
+networks:
+  minio_net:
+    driver: bridge
+    name: minio_net
