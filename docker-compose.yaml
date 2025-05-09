@@ -5,9 +5,9 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - ./label-studio:/label-studio
+      - ./label-studio/mydata:/label-studio/data
     environment:
-      - LABEL_STUDIO_HOST=http://14.161.17.92:8080 # using IPv4
+      - LABEL_STUDIO_HOST=http://localhost:8080 # using IP Public
       - LABEL_STUDIO_PORT=8080
     networks:
       - minio_net

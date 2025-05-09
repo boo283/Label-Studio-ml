@@ -3,7 +3,7 @@ version: "3.8"
 services:
   segment_anything_model:
     container_name: segment_anything_model
-#    image: heartexlabs/label-studio-ml-backend:sam-master
+ #   image: heartexlabs/label-studio-ml-backend:sam-master
     image: sam:latest
     init: true
     build:
@@ -43,14 +43,14 @@ services:
       # Use prefix 'http://' or 'https://' for the URL always.
       # Determine the actual IP using 'ifconfig' (Linux/Mac) or 'ipconfig' (Windows).
       - LABEL_STUDIO_HOST=http://host.docker.internal:8080
-      - LABEL_STUDIO_ACCESS_TOKEN=8e66b9d9cb46d29db39e731915429787eb031121
+      - LABEL_STUDIO_ACCESS_TOKEN=ac7b8789996477b0338e23817b93e2c7faef6717
 
     networks:
       - minio_net
 
 
     ports:
-      - 9090:9090
+      - 9091:9090
     volumes:
       - "./data/server:/data"
 
